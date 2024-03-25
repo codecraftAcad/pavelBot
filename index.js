@@ -126,7 +126,7 @@ faceSwapScene.enter(async (ctx)=>{
             user_id: ownerId,
             name: 'YourStickerSetName', // Replace with your desired sticker set name
             title: 'YourStickerSetTitle', // Replace with your desired sticker set title
-            stickers: [swapFaceUrl
+            stickers: [resizedBuffer
             ],
             sticker_format: 'static' // Format of the sticker
         };
