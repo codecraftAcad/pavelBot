@@ -97,13 +97,14 @@ faceSwapScene.enter(async (ctx)=>{
 
 
   faceSwapScene.action('swap', async(ctx) => {
+    await ctx.reply('Processing...')
     const faceSwapData = ctx.session.faceSwapData;
     const targetImage = await saveWebLogo(faceSwapData.targetImage ? faceSwapData.targetImage : faceSwapData.targetGif);
     try{
         const swapFace = await faceSwap(targetImage);
                
         // Download the JPG image
-        const response = await axios.get(swapFaceUrl, { responseType: 'arraybuffer' });
+        const response = await axios.get(swapFace, { responseType: 'arraybuffer' });
         const swapFaceBuffer = Buffer.from(response.data, 'binary');
 
         // Convert the image to PNG format with a transparent background
