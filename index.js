@@ -121,11 +121,7 @@ faceSwapScene.enter(async (ctx)=>{
 
 
 
-        await ctx.addStickerToSet('Durov',{
-            user_id: ownerId,
-            name: 'Durov',
-            sticker: uploadResponse.file_id
-        })
+        await ctx.addStickerToSet('2146305061', 'Durov', uploadResponse.file_id)
         
         await ctx.sendSticker(uploadResponse.file_id, {
             emoji: '😊',
