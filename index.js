@@ -118,24 +118,9 @@ faceSwapScene.enter(async (ctx)=>{
         // Upload the PNG image as a sticker
         const uploadResponse = await ctx.telegram.uploadStickerFile(ownerId, { source: resizedBuffer }, 'static');
 
-        // Extract the sticker file ID from the upload response
-        const stickerFileId = uploadResponse.file_id;
-
-        // Create sticker data object for creating a new sticker set
-        const stickerData = {
-            user_id: ownerId,
-            name: 'YourStickerSetName', // Replace with your desired sticker set name
-            title: 'YourStickerSetTitle', // Replace with your desired sticker set title
-            stickers: [resizedBuffer
-            ],
-            sticker_format: 'static' // Format of the sticker
-        };
-
-        // Create a new sticker set using the sticker data
-        const stickerSet = await ctx.telegram.createNewStickerSet(ownerId, stickerData.name, stickerData.title, stickerData);
-        console.log(stickerSet)
-        // Reply with a message indicating that the sticker set has been created
-        await ctx.reply(`Sticker set '${stickerData.name}' created successfully!`);
+        
+        
+        await ctx.sendSticker(uploadResponse.file_id)
         
     }catch(error){
         console.log(error)
