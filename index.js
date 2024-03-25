@@ -121,7 +121,7 @@ faceSwapScene.enter(async (ctx)=>{
         console.log('File extension:', fileExtension);
 
         // Upload the converted image as a sticker
-        const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: pngBuffer });
+        const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: pngBuffer }, 'static');
 
         // Reply with the sticker
         await ctx.replyWithSticker(sticker.file_id);
