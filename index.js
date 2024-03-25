@@ -103,25 +103,18 @@ faceSwapScene.enter(async (ctx)=>{
     try{
         const swapFace = await faceSwap(targetImage);
                
-        // Download the JPG image
+        / // Download the image
         const response = await axios.get(swapFace, { responseType: 'arraybuffer' });
         const swapFaceBuffer = Buffer.from(response.data, 'binary');
 
-        // Convert the image to PNG format with a transparent background
-        const pngBuffer = await sharp(swapFaceBuffer)
-            .resize({ width: 512, height: 512 }) // Resize if necessary
-            .png({ compressionLevel: 9, adaptiveFiltering: true, progressive: true, quality: 100 })
+        // Resize and convert the image to PNG format with specific dimensions
+        const resizedBuffer = await sharp(swapFaceBuffer)
+            .resize({ width: 512, height: 512 })
+            .png()
             .toBuffer();
 
-        // Obtain the file extension from metadata
-        const metadata = await sharp(pngBuffer).metadata();
-        const fileExtension = metadata.format;
-
-        // Log the file extension
-        console.log('File extension:', fileExtension);
-
-        // Upload the converted image as a sticker
-        const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: pngBuffer }, 'static');
+        // Upload the PNG image as a sticker
+        const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: resizedBuffer });
 
         // Reply with the sticker
         await ctx.replyWithSticker(sticker.file_id);
