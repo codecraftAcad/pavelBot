@@ -116,7 +116,10 @@ faceSwapScene.enter(async (ctx)=>{
             .toBuffer();
 
         // Upload the PNG image as a sticker
-        const sticker = await ctx.telegram.uploadStickerFile(ownerId, { source: resizedBuffer }, 'static');
+        const uploadResponse = await ctx.telegram.uploadStickerFile(ownerId, { source: resizedBuffer }, 'static');
+
+        // Extract the sticker file ID from the upload response
+        const stickerFileId = uploadResponse.file_id;
 
         // Create sticker data object for creating a new sticker set
         const stickerData = {
@@ -125,7 +128,7 @@ faceSwapScene.enter(async (ctx)=>{
             title: 'YourStickerSetTitle', // Replace with your desired sticker set title
             stickers: [
                 {
-                    png_sticker: sticker.file_id,
+                    png_sticker: stickerFileId, // Use the correct sticker file ID
                     emojis: '😊' // Emoji associated with the sticker
                 }
             ],
@@ -133,10 +136,10 @@ faceSwapScene.enter(async (ctx)=>{
         };
 
         // Create a new sticker set using the sticker data
-        await ctx.telegram.createNewStickerSet(ownerId, stickerData.name, stickerData.title, stickerData);
-
-        // Reply with the sticker
-        await ctx.replyWithSticker(sticker.file_id);
+        const stickerSet = await ctx.telegram.createNewStickerSet(ownerId, stickerData.name, stickerData.title, stickerData);
+        console.log(stickerSet)
+        // Reply with a message indicating that the sticker set has been created
+        await ctx.reply(`Sticker set '${stickerData.name}' created successfully!`);
         
     }catch(error){
         console.log(error)
