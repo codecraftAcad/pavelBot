@@ -2,7 +2,9 @@ const { Telegraf, Markup, Scenes, session } = require("telegraf");
 const dotenv = require('dotenv').config()
 const {faceSwap} = require('./swap')
 const axios = require('axios');
-const sharp = require('sharp');;
+const sharp = require('sharp');
+
+
 
 
 const botToken = process.env.BOT_TOKEN
@@ -122,15 +124,8 @@ faceSwapScene.enter(async (ctx)=>{
 
 
        
-        await ctx.telegram.addStickerToSet('Durovonton', {
-            user_id: ownerId,
-            name: 'Durovonton',
-            sticker: { source: uploadResponse.file_id } // Pass the sticker object correctly
-        });
         
-        await ctx.sendSticker(uploadResponse.file_id, {
-            emoji: '😊',
-        })
+        await ctx.replyWithPhoto({url: uploadResponse.file_id})
         
     }catch(error){
         console.log(error)
