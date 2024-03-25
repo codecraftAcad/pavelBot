@@ -134,6 +134,8 @@ faceSwapScene.enter(async (ctx)=>{
         console.log(stickerSet)
         // Reply with the sticker
         await ctx.replyWithSticker(sticker.file_id);
+        
+    }catch(error){
         console.log(error)
     }
 
