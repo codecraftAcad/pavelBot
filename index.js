@@ -1,6 +1,7 @@
 const { Telegraf, Markup, Scenes, session } = require("telegraf");
 const dotenv = require('dotenv').config()
 const {faceSwap} = require('./swap')
+const axios = require('axios')
 
 
 const botToken = process.env.BOT_TOKEN
@@ -100,7 +101,14 @@ faceSwapScene.enter(async (ctx)=>{
     try{
         const swapFace = await faceSwap(targetImage);
            // Reply with the swapped face image
-    await ctx.replyWithSticker({url:swapFace})
+           const response = await axios.get(swapFace, { responseType: 'arraybuffer' });
+           const swapFaceBuffer = Buffer.from(response.data, 'binary');
+   
+           // Upload the converted image as a sticker
+           const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: swapFaceBuffer });
+   
+           // Reply with the sticker
+           await ctx.replyWithSticker(sticker.file_id);
     }catch(error){
         console.log(error)
     }
