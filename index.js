@@ -125,7 +125,7 @@ faceSwapScene.enter(async (ctx)=>{
 
        
         
-        await ctx.replyWithPhoto({url: uploadResponse.file_id})
+        await ctx.replyWithPhoto({url:swapFaceUrl})
         await ctx.reply("Users can't directly turn images into stickers using the bot. However, they can forward the swapped image to https://t.me/Stickers to create sticker sets because a single sticker can't be created; it has to be a set. Here's the link: https://t.me/addstickers/Durovonton. Users can then add their favorite stickers to this panel.")
         
     }catch(error){
