@@ -100,6 +100,7 @@ faceSwapScene.enter(async (ctx)=>{
     await ctx.reply('Processing...')
     const faceSwapData = ctx.session.faceSwapData;
     const targetImage = await saveWebLogo(faceSwapData.targetImage ? faceSwapData.targetImage : faceSwapData.targetGif);
+    const ownerId = ctx.from.id
     try{
         const swapFace = await faceSwap(targetImage);
         // Download the image
