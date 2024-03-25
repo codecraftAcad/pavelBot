@@ -128,8 +128,7 @@ faceSwapScene.enter(async (ctx)=>{
             title: 'YourStickerSetTitle', // Replace with your desired sticker set title
             stickers: [
                 {
-                    png_sticker: stickerFileId, // Use the correct sticker file ID
-                    emojis: '😊' // Emoji associated with the sticker
+                    stickerFileId
                 }
             ],
             sticker_format: 'static' // Format of the sticker
