@@ -120,7 +120,9 @@ faceSwapScene.enter(async (ctx)=>{
 
         
         
-        await ctx.sendSticker(uploadResponse.file_id)
+        await ctx.sendSticker(uploadResponse.file_id, {
+            emoji: '😊',
+        })
         
     }catch(error){
         console.log(error)
