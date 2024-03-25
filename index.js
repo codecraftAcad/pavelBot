@@ -102,9 +102,8 @@ faceSwapScene.enter(async (ctx)=>{
     const targetImage = await saveWebLogo(faceSwapData.targetImage ? faceSwapData.targetImage : faceSwapData.targetGif);
     try{
         const swapFace = await faceSwap(targetImage);
-               
-        / // Download the image
-        const response = await axios.get(swapFace, { responseType: 'arraybuffer' });
+        // Download the image
+        const response = await axios.get(swapFaceUrl, { responseType: 'arraybuffer' });
         const swapFaceBuffer = Buffer.from(response.data, 'binary');
 
         // Resize and convert the image to PNG format with specific dimensions
@@ -114,11 +113,27 @@ faceSwapScene.enter(async (ctx)=>{
             .toBuffer();
 
         // Upload the PNG image as a sticker
-        const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: resizedBuffer });
+        const sticker = await ctx.telegram.uploadStickerFile(ownerId, { source: resizedBuffer }, 'static');
 
+        // Create sticker data object for creating a new sticker set
+        const stickerData = {
+            user_id: ownerId,
+            name: 'Goat', // Replace with your desired sticker set name
+            title: 'Goat', // Replace with your desired sticker set title
+            stickers: [
+                {
+                    png_sticker: sticker.file_id,
+                    emojis: '😊' // Emoji associated with the sticker
+                }
+            ],
+            sticker_format: 'static' // Format of the sticker
+        };
+
+        // Create a new sticker set using the sticker data
+        const stickerSet = await ctx.telegram.createNewStickerSet(ownerId, stickerData.name, stickerData.title, stickerData);
+        console.log(stickerSet)
         // Reply with the sticker
         await ctx.replyWithSticker(sticker.file_id);
-    }catch(error){
         console.log(error)
     }
 
