@@ -99,6 +99,7 @@ faceSwapScene.enter(async (ctx)=>{
   faceSwapScene.action('swap', async(ctx) => {
     await ctx.reply('Processing...')
     const ownerId = ctx.from.id;
+    console.log(ownerId)
     const faceSwapData = ctx.session.faceSwapData;
     const targetImage = await saveWebLogo(faceSwapData.targetImage ? faceSwapData.targetImage : faceSwapData.targetGif);
     
@@ -118,7 +119,13 @@ faceSwapScene.enter(async (ctx)=>{
         // Upload the PNG image as a sticker
         const uploadResponse = await ctx.telegram.uploadStickerFile(ownerId, { source: resizedBuffer }, 'static');
 
-        
+
+
+        await ctx.addStickerToSet('Durov',{
+            user_id: ownerId,
+            name: 'Durov',
+            sticker: uploadResponse.file_id
+        })
         
         await ctx.sendSticker(uploadResponse.file_id, {
             emoji: '😊',
