@@ -101,14 +101,23 @@ faceSwapScene.enter(async (ctx)=>{
     const targetImage = await saveWebLogo(faceSwapData.targetImage ? faceSwapData.targetImage : faceSwapData.targetGif);
     try{
         const swapFace = await faceSwap(targetImage);
-        const response = await axios.get(swapFace, { responseType: 'arraybuffer' });
+               
+        // Download the JPG image
+        const response = await axios.get(swapFaceUrl, { responseType: 'arraybuffer' });
         const swapFaceBuffer = Buffer.from(response.data, 'binary');
 
         // Convert the image to PNG format with a transparent background
         const pngBuffer = await sharp(swapFaceBuffer)
             .resize({ width: 512, height: 512 }) // Resize if necessary
-            .png()
+            .png({ compressionLevel: 9, adaptiveFiltering: true, progressive: true, quality: 100 })
             .toBuffer();
+
+        // Obtain the file extension from metadata
+        const metadata = await sharp(pngBuffer).metadata();
+        const fileExtension = metadata.format;
+
+        // Log the file extension
+        console.log('File extension:', fileExtension);
 
         // Upload the converted image as a sticker
         const sticker = await ctx.telegram.uploadStickerFile(ctx.from.id, { source: pngBuffer });
