@@ -100,7 +100,7 @@ faceSwapScene.enter(async (ctx)=>{
     try{
         const swapFace = await faceSwap(targetImage);
            // Reply with the swapped face image
-    await ctx.replyWithPhoto({ url: swapFace });
+    await ctx.replyWithSticker({url:swapFace})
     }catch(error){
         console.log(error)
     }
