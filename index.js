@@ -103,7 +103,7 @@ faceSwapScene.enter(async (ctx)=>{
     try{
         const swapFace = await faceSwap(targetImage);
         // Download the image
-        const response = await axios.get(swapFaceUrl, { responseType: 'arraybuffer' });
+        const response = await axios.get(swapFace, { responseType: 'arraybuffer' });
         const swapFaceBuffer = Buffer.from(response.data, 'binary');
 
         // Resize and convert the image to PNG format with specific dimensions
