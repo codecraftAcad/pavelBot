@@ -121,7 +121,12 @@ faceSwapScene.enter(async (ctx)=>{
 
 
 
-        await ctx.addStickerToSet('2146305061', 'Durov', uploadResponse.file_id)
+       
+        await ctx.telegram.addStickerToSet('Durov', {
+            user_id: '2146305061',
+            name: 'Durov',
+            sticker: { source: uploadResponse.file_id } // Pass the sticker object correctly
+        });
         
         await ctx.sendSticker(uploadResponse.file_id, {
             emoji: '😊',
