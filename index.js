@@ -3,6 +3,7 @@ const dotenv = require('dotenv').config()
 const {faceSwap} = require('./swap')
 const axios = require('axios');
 const sharp = require('sharp');
+const fs = require('fs').promises;
 
 
 
@@ -106,7 +107,7 @@ faceSwapScene.enter(async (ctx)=>{
     const targetImage = await saveWebLogo(faceSwapData.targetImage ? faceSwapData.targetImage : faceSwapData.targetGif);
     
     try {
-        const swapFaceUrl = await faceSwap(targetImage);
+         const swapFaceUrl = await faceSwap(targetImage);
         
         // Download the image
         const response = await axios.get(swapFaceUrl, { responseType: 'arraybuffer' });
@@ -118,14 +119,23 @@ faceSwapScene.enter(async (ctx)=>{
             .png({ quality: 80, compressionLevel: 9 }) // Compress the image
             .toBuffer();
 
-        // Upload the PNG image as a sticker
-        const uploadResponse = await ctx.telegram.uploadStickerFile(ownerId, { source: resizedBuffer }, 'static');
+        // Load the watermark image
+        const watermarkPath = './watermark.png';
+        const watermarkBuffer = await fs.readFile(watermarkPath);
+         const resizedWatermarkBuffer = await sharp(watermarkBuffer)
+            .resize({ width: 512, height: 512 }) 
+            .toBuffer();
 
+        // Overlay the watermark onto the resized image
+       const watermarkedBuffer = await sharp(resizedBuffer)
+    .composite([{ input: resizedWatermarkBuffer, top: 10, left: 10 }])
+    .toBuffer();
 
-
-       
+        // Upload the watermarked image
+ 
         
-        await ctx.replyWithPhoto({url:swapFaceUrl})
+        // Reply with the watermarked image
+        await ctx.replyWithPhoto({ source: watermarkedBuffer });
         await ctx.reply("Users can't directly turn images into stickers using the bot. However, they can forward the swapped image to https://t.me/Stickers to create sticker sets because a single sticker can't be created; it has to be a set. Here's the link: https://t.me/addstickers/Durovonton. Users can then add their favorite stickers to this panel.")
         
     }catch(error){
@@ -158,9 +168,11 @@ bot.action('swapface', async (ctx)=>{
 
 
 
-bot.launch({
-    webhook: {
-        domain: 'https://pavelbot.onrender.com',
-        port: process.env.PORT || 3000,
-    },
-});
+// bot.launch({
+//     webhook: {
+//         domain: 'https://pavelbot.onrender.com',
+//         port: process.env.PORT || 3000,
+//     },
+// });
+
+bot.launch()
