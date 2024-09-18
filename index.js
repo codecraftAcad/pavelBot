@@ -170,7 +170,7 @@ bot.action('swapface', async (ctx)=>{
 
 bot.launch({
     webhook: {
-        domain: 'https://pavelbot.onrender.com',
+        domain: 'https://pavelbot-7f6s.onrender.com',
         port: process.env.PORT || 3000,
     },
 });
